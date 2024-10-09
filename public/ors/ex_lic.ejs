@@ -1,0 +1,219 @@
+<!-- toastr -->
+<script src="plugins/notification/snackbar/snackbar.min.js"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+
+<!--  BEGIN CUSTOM SCRIPTS FILE  -->
+<script src="assets/js/components/notification/custom-snackbar.js"></script>
+<!--  END CUSTOM SCRIPTS FILE  -->
+
+<script>
+    // Get the Toast button
+    var toastButton = document.getElementById("toast-btn");
+    // Get the Toast element
+    var toastElement = document.getElementsByClassName("toast")[0];
+
+    toastButton.onclick = function() {
+        $('.toast').toast('show');
+    }
+
+
+</script>
+<script type="text/javascript">
+setTimeout(
+function myApp()
+{ 
+$.ajax({
+url: 'ComplLicEx',
+dataType: 'json',
+success: function(data) {
+$("#html5-extension").find('tbody').empty();
+    for (var i=0; i<data.length; i++) {
+        if(data[i].paymentStatus){
+                var row = '<tr><td class="text-black tacker" id="tacker" style="font-weight: bold;">' + data[i].BLNumber+ '</td>'; 
+                row = row + '<td style="color: black;"> ' + data[i].EntityName + ' </td>';
+            row = row + '<td style="color: black;">' + data[i].businessTypeName + '</span></td>';
+            row = row + '<td style="color: black;"> ' + data[i].BusinessClassId + ' </td>';
+            row = row + '<td style="color: black;">' + data[i].FeePaid + '</td>';
+            // row = row + '<td style="color: black;">' + data[i].expireDate + '</td>';
+            if(data[i].IsBranch === 'Principal'){
+                if(data[i].LicenceStatusId === 'Active'){
+            row = row + '<td>'+
+                '<div class="btn-group">'+
+                    '<button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">Action'+
+                    '</button>'+
+                    '<div class="dropdown-menu" aria-labelledby="dropdownMenuReference1">'+
+                        '<a class="dropdown-item warning passingID text-black" href="http://41.59.228.25/api/printout/'+data[i].trackingNo +'/4201/bl">Download Certificate</a>'+
+                        // '<a class="dropdown-item warning passingID text-black" href="http://41.59.225.60/api/printout/'+data[i].trackingNo +'/4201/bl">Download Certificate</a>'+
+                        '<a class="dropdown-item text-black" href="/CancelApplication/'+data[i].trackingNo+'" >Cancelation</a>'+
+                        '<a class="dropdown-item text-black" href="/ApplyBLBranch/'+data[i].trackingNo+'" >Apply For Branch</a>'+
+                        '<a class="dropdown-item text-black" href="/Transfer/'+data[i].trackingNo+'">Change of Location</a>'+
+                '</div>'+
+                ' </td></tr>';
+                    }
+                    if(data[i].LicenceStatusId === 'Expired'){
+            row = row + '<td>'+
+                '<div class="btn-group">'+
+                    '<button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">Action'+
+                    '</button>'+
+                    '<div class="dropdown-menu" aria-labelledby="dropdownMenuReference1">'+
+                        '<a class="dropdown-item text-black warning confirm" data-id="'+ data[i].trackingNo +'">Renew</a>'+
+                '</div>'+
+                ' </td></tr>';
+                    }
+                    if(data[i].LicenceStatusId === 'Cancelled'){
+                    }
+                    if(data[i].LicenceStatusId === 'Expired '){
+                    }
+                    }
+            if(data[i].IsBranch === 'Branch'){
+                if(data[i].LicenceStatusId === 'Active'){
+            row = row + '<td>'+
+                '<div class="btn-group">'+
+                    '<button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">Action'+
+                    '</button>'+
+                    '<div class="dropdown-menu" aria-labelledby="dropdownMenuReference1">'+
+                        '<a class="dropdown-item warning passingID text-black" href="http://41.59.228.25/api/printout/'+data[i].trackingNo +'/4201/bl">Download Certificate</a>'+
+                        // '<a class="dropdown-item warning passingID text-black" href="http://41.59.225.60/api/printout/'+data[i].trackingNo +'/4201/bl">Download Certificate</a>'+
+                        '<a class="dropdown-item text-black" href="/CancelApplication/'+data[i].trackingNo+'" >Cancelation</a>'+
+                        '<a class="dropdown-item text-black" href="/Transfer/'+data[i].trackingNo+'">Change of Location</a>'+
+                '</div>'+
+                ' </td></tr>';
+                    }
+                    if(data[i].LicenceStatusId === 'Expired'){
+            row = row + '<td>'+
+                '<div class="btn-group">'+
+                    '<button type="button" class="btn btn-primary btn-sm dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">Action'+
+                    '</button>'+
+                    '<div class="dropdown-menu" aria-labelledby="dropdownMenuReference1">'+
+                        '<a class="dropdown-item text-black warning confirm" data-id="'+ data[i].trackingNo +'">Renew</a>'+
+                '</div>'+
+                ' </td></tr>';
+                    }
+                    if(data[i].LicenceStatusId === 'Cancelled'){
+
+                    }
+                    if(data[i].LicenceStatusId === 'Expired '){
+                    }
+                    }
+            }
+      
+        $('#html5-extension').append(row);
+        $('.widget-content .warning.confirm').on('click', function () {
+            var deleteBtn = $(this),
+            id = deleteBtn.data('id'),
+            title_tracker = deleteBtn.closest('tr').find('.tacker').text();
+
+            $('#rotateInDownLeft').modal('show');
+            var txtBox = document.getElementById('swali');
+            var uploadType = document.getElementById('uploadType');
+            txtBox.textContent = "Do you want to Renew Business Licence Number " + title_tracker+"?";
+            uploadType.value = title_tracker
+            })
+    }
+}
+});
+}, 2000);
+
+function validateSize(input) {
+      const fileSize = input.files[0].size / 1024 / 1024; // in MiB
+      if (fileSize > 2) {
+        swal({
+                type: 'error',
+                title: 'Oops...',
+                text: 'File size exceeds 2 MiB, Please Try Again!',
+                padding: '2em',
+                timer: 3000
+            })
+        document.querySelector('#upload-btn').disabled = true;
+        // $(file).val(''); //for clearing with Jquery
+      } else {
+        // Proceed further
+        if ( input.files[0].type === 'application/pdf' ) {
+            console.log( 'It is validated!' )
+        document.querySelector('#upload-btn').disabled = false;
+        }else{
+            swal({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Only PDF file required, Please Try Again!',
+                padding: '2em',
+                timer: 3000
+            })
+            document.querySelector('#upload-btn').disabled = true;
+        }
+      }
+}
+
+function fileUploadX(){
+$(".TinLoader").show();
+$(".TinFirst").hide();
+var fileInput = document.querySelector('#fileupload');
+var regId = document.getElementById('categoryID').value;
+var uploadType = document.getElementById('uploadType').value;
+var file = fileInput.files[0];
+var fileName = file.name;
+
+var reader = new FileReader();
+reader.readAsDataURL(fileInput.files[0]);
+
+reader.onload = function () {
+    $.ajax({
+            url: "/Renew",
+            type: 'POST',
+            data: JSON.stringify({"BLNumber": uploadType}),
+            contentType: 'application/json',
+            success: function(response) {
+                if(response.status == 'fail'){
+                    $(".TinLoader").hide();
+                    $(".TinFirst").show();
+                    swal({
+                        type: 'error',
+                        title: 'Oops...',
+                        text: response.data,
+                        padding: '2em',
+                        timer: 3000
+                    })
+                }else if(response.status == 'success'){
+                    $.ajax({
+                    url: "/UploadFx",
+                    type: 'POST',
+                    data: JSON.stringify({"atachment": reader.result, "attachmentId": regId}),
+                    contentType: 'application/json',
+                    success: function(response) {
+                    // alert("response")
+                        if(typeof(response) === "string"){response = JSON.parse(response)}
+                        $(".TinLoader").hide();
+                        $(".TinFirst").show();
+                            swal({
+                                    title: 'Renew Business Licence!',
+                                    text: 'Application for Renew of Business Licence has been sent succesfully.',
+                                    type: 'success',
+                                    timer: 3000,
+                                }
+                            ).then(function(result){
+                                // location.reload();
+                                window.location.href = "/Dashboard";
+                            })
+                    }
+                });
+                }
+            }
+            });
+  
+    // alert(reader.result);
+	console.log(reader.result);//base64encoded string
+
+};
+reader.onerror = function (error) {
+    //alert('Error: ' + error);
+	console.log('Error: ', error);
+    swal({
+            type: 'error',
+            title: 'Oops...',
+            text: fileName + ' Fail to upload, please try again',
+            padding: '2em',
+            timer: 3000
+        })
+};
+}
+</script>
